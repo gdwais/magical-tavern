@@ -1,0 +1,16 @@
+
+
+{
+    "name": "magical-tavern",
+    "version": "1.0.0",
+    "main": "server.js",
+    "description": "MEAN stack application - started using this tutorial: https://scotch.io/tutorials/setting-up-a-mean-stack-single-page-application",
+    "author": "Dalton Wais",
+    "license": "unlicensed freeware",
+    "dependencies": {
+        "express": "~4.5.1",
+        "mongoose": "~5.0.3",
+        "body-parser": "~1.4.2",
+        "method-override": "~2.0.0"
+    }
+}
