@@ -1,5 +1,5 @@
 //  config/db.js
-
+var DB_PATH = 'mongodb://127.0.0.1/magical-tavern-db';
 module.exports = {
-    url: 'mongodb://localhost/magical-tavern-db'
+    url: DB_PATH
 }

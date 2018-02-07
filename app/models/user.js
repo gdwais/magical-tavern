@@ -2,10 +2,7 @@
 
 var mongoose = require('mongoose');
 
-//  define our user model
-module.exports = mongoose.model('User', {
-    username: {type: String, default: ''},
-    password: { type : String, default: ''},
-    datecreated: { type: Date, default: Date.now }
+var UserSchema = new mongoose.Schema({ username: 'string', password: 'string', datecreated: { type: Date, default: Date.now }});
 
-});
+//  define our user model
+module.exports = mongoose.model('User', UserSchema);
