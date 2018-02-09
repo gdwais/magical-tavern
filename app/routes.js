@@ -1,17 +1,25 @@
 //  app/routes.js
-
-
 var User = require('./models/user');
+var jwt = require('express-jwt');
+var auth = jwt({
+  secret: 'SOME_CRAZY_STRING',
+  userProperty: 'payload'
+});
+
+var ProfileController = require('../controllers/profile');
+var AuthenticationController = require('../controllers/authentication');
 
 module.exports = function(app) {
     
-    
     /*
-        USER ENDPOINTS
+        Authentication endpoints
     */
-    var endpoint = '/api/users';
-    //GET ALL USERS
-    app.get(endpoint, function(req, res) {
+
+    app.get('/api/profile', auth, ProfileController.getProfile);
+    app.post('/api/register', AuthenticationController.register);
+    app.post('api/login', AuthenticationController.login);
+    
+    app.get('/api/users', function(req, res) {
         User.find(function(err, response) {
             if (err) {
                 res.send(err);
@@ -21,8 +29,7 @@ module.exports = function(app) {
         })
     });
 
-    //GET USER BY USERNAME
-    app.get(endpoint + '/:username', function(req, res) {
+    app.get('/api/users/:username', function(req, res) {
         debugger;
         var username = req.params.username;
         User.find({ username: username }, function(err, response) {
@@ -36,8 +43,7 @@ module.exports = function(app) {
         })
     });
 
-    //CREATE NEW USER
-    app.post(endpoint, function(req, res) {
+    app.post('/api/users', function(req, res) {
         User.create(req.body, function(err, response) {
             if (err) {
                 console.log(err);
@@ -47,9 +53,8 @@ module.exports = function(app) {
             }
         });
     });
-    
-    //CREATE NEW USER
-    app.put(endpoint + '/:username', function(req, res) {
+
+    app.put('/api/users/:username', function(req, res) {
         //in progress
         User.update(req.body, function(err, response) {
             if (err) {
@@ -61,8 +66,7 @@ module.exports = function(app) {
         });
     });
 
-    //DELETE USER
-    app.delete(endpoint + '/:username', function(req, res) {
+    app.delete('/api/users/:username', function(req, res) {
         var username = req.params.username;
         User.deleteOne({ username: username}, function(err, response) {
             if (err){
