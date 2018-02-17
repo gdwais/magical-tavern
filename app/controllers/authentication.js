@@ -3,34 +3,19 @@
 var pssprt = require('passport');
 var mongoose = require('mongoose');
 var UserModel = mongoose.model('User');
-
 function respondWithJSON(res, status, content) {
     res.status(status);
     res.json(content);
 };
-function validateRequest(req){
-      if(!req.body.email) {
-         sendJSONresponse(res, 400, {
-               "error": "req.body.email is required"
-         });
-         return;
-       }
-       if(!req.body.password) {
-         sendJSONresponse(res, 400, {
-               "error": "req.body.password is required"
-         });
-         return;
-       }
-}
-model.exports.register = function(res, req) {
+
+module.exports.register = function(req, res) {
     
-    validateRequest(); 
-    if(!req.body.name) {
-        sendJSONresponse(res, 400, {
-              "error": "req.body.name is required"
-        });
-        return;
-      } 
+       if(!req.body.name || !req.body.email || !req.body.password) {
+   sendJSONresponse(res, 400, {
+       "message": "All fields required"
+     });
+     return;
+    }
     var user = new UserModel;
     user.name = req.body.user
     user.email = req.body.email;
@@ -52,8 +37,19 @@ model.exports.register = function(res, req) {
     });
 };
 
-model.exports.login = function(req, res) {
-    validateRequest(req);
+module.exports.login = function(req, res) {
+    if(!req.body.email) {
+        sendJSONresponse(res, 400, {
+              "error": "req.body.email is required"
+        });
+        return;
+      }
+      if(!req.body.password) {
+        sendJSONresponse(res, 400, {
+              "error": "req.body.password is required"
+        });
+        return;
+      }
     
     pssprt.authenticate('local', function(err, user, info) {
         var token;

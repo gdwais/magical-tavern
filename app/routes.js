@@ -1,13 +1,19 @@
 //  app/routes.js
-var User = require('./models/user');
+
+//models
+var UserModel = require('./models/user');
+var CharacterModel = require('./models/character');
+
 var jwt = require('express-jwt');
 var auth = jwt({
   secret: 'SOME_CRAZY_STRING',
   userProperty: 'payload'
 });
 
-var ProfileController = require('../controllers/profile');
-var AuthenticationController = require('../controllers/authentication');
+//controllers
+var ProfileController = require('./controllers/profile');
+var AuthenticationController = require('./controllers/authentication');
+var CharacterController = require('./controllers/character');
 
 module.exports = function(app) {
     
@@ -16,11 +22,16 @@ module.exports = function(app) {
     */
 
     app.get('/api/profile', auth, ProfileController.getProfile);
-    app.post('/api/register', AuthenticationController.register);
-    app.post('api/login', AuthenticationController.login);
+
+    app.post('/api/register', function(req, res) {
+        AuthenticationController.register(req, res);
+    });
+    app.post('api/login', function(req, res) {
+        AuthenticationController.login(req, res);
+    });
     
     app.get('/api/users', function(req, res) {
-        User.find(function(err, response) {
+        UserModel.find(function(err, response) {
             if (err) {
                 res.send(err);
             } else {
@@ -30,21 +41,19 @@ module.exports = function(app) {
     });
 
     app.get('/api/users/:username', function(req, res) {
-        debugger;
         var username = req.params.username;
-        User.find({ username: username }, function(err, response) {
+        UserModel.find({ username: username }, function(err, response) {
             if (err) {
                 console.log(err);
                 res.send(err);
             } else {
-                
                 res.json(response);
             }
         })
     });
 
     app.post('/api/users', function(req, res) {
-        User.create(req.body, function(err, response) {
+        UserModel.create(req.body, function(err, response) {
             if (err) {
                 console.log(err);
                 res.send(err);
@@ -56,7 +65,7 @@ module.exports = function(app) {
 
     app.put('/api/users/:username', function(req, res) {
         //in progress
-        User.update(req.body, function(err, response) {
+        UserModel.update(req.body, function(err, response) {
             if (err) {
                 console.log(err);
                 res.send(err);
@@ -68,7 +77,7 @@ module.exports = function(app) {
 
     app.delete('/api/users/:username', function(req, res) {
         var username = req.params.username;
-        User.deleteOne({ username: username}, function(err, response) {
+        UserModel.deleteOne({ username: username}, function(err, response) {
             if (err){
                 console.log(err);
                 res.send(err);
@@ -77,6 +86,23 @@ module.exports = function(app) {
             }
         })
     });
+
+
+    //  character routes ====================
+    //app.get('/api/characters', auth, CharacterController.getCharacters);
+
+    // app.get('/api/getallcharacters', function(req, res) {
+    //     CharacterModel.find(function(err, characters) {
+    //         if (err) {
+    //             console.log(err);
+    //             res.status(400).send(err);
+    //         } else {
+    //             res.status(200).json(characters);
+    //         }
+    //     });
+    // });
+
+
     //  frontend routes =====================
     app.get('*', function(req, res) {
         res.sendfile('./public/views/index.html');

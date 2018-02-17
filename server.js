@@ -9,32 +9,26 @@ var methodOverride = require('method-override');
 
 //  configuration =============================
 
-//  config files
 var db = require('./config/db');
-
-//  set port
 var port = process.env.PORT || 8080;
-
-//  connect to our mongoDB database
-//  (uncomment after you enter in your own credentials in config/db.js)
 var mongoose = require('mongoose');
-mongoose.connect(db.url);
 
-//  get all data/stuff of the body (POST) paramters
-//  parse application/json
+var testMode = false;  //TODO: Add test flag check here
+
+if(testMode) {
+    mongoose.connect(db.url_test);
+} else {
+    mongoose.connect(db.url);
+}
+
 app.use(bodyParser.json());
 
-//  parse application/vnd.api+json as json
 app.use(bodyParser.json({ type: 'application/vnd.api+json'}));
 
-//  parse application/x-www.form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//  override with the X-HTTP-Method-Override header in the request. simulate DELETE/PUT
 app.use(methodOverride('X-HTTP-Method-Override'));
 
-
-//  set the static files locations /public/img will be /img for users
 app.use(express.static(__dirname + '/public'));
 
 //  routes====================

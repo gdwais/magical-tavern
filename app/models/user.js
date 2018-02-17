@@ -41,8 +41,8 @@ var userSchema = new mongoose.Schema({
         email: this.email,
         name: this.name,
         exp: parseInt(expirationDate.getTime() / 1000),
-      }, "SOME_CRAZY_STRING");  // TODO: Move this out of here
-      });
+      }, "SOME_CRAZY_STRING" );  // TODO: Move this out of here
     };
+    
 //  define our user model
 module.exports = mongoose.model('User', userSchema);
