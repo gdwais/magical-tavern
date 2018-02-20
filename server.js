@@ -13,13 +13,7 @@ var db = require('./config/db');
 var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 
-var testMode = false;  //TODO: Add test flag check here
-
-if(testMode) {
-    mongoose.connect(db.url_test);
-} else {
-    mongoose.connect(db.url);
-}
+mongoose.connect(db.url);
 
 app.use(bodyParser.json());
 
