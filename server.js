@@ -1,40 +1,30 @@
-// server.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
 
-//  modules ===================================
-
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-
-//  configuration =============================
-
-var db = require('./config/db');
-var port = process.env.PORT || 8080;
-var mongoose = require('mongoose');
-
-mongoose.connect(db.url);
+const Configuration = require('./config/default');
+const pkg = require('./package.json');
+const port = Configuration.application.port;
 
 app.use(bodyParser.json());
-
-app.use(bodyParser.json({ type: 'application/vnd.api+json'}));
-
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(methodOverride('X-HTTP-Method-Override'));
+let logServerMessage = msg => {
+  console.log(`${pkg.name} v${pkg.version} :: ${msg}`);
+};
 
-app.use(express.static(__dirname + '/public'));
+global.logMessage = logServerMessage;
 
-//  routes====================
 
-require('./app/routes')(app);  // configure our routes
+app.get('/api/ekg', (req, res) => {
+    let payload = {
+        name: pkg.name,
+        version: pkg.version
+    };
+    res.send({body:payload});
+});
 
-//  start app ================
-//  startup magical-tavern at http://localhost:8080
-app.listen(port);
+const routes = require('./server/routes');
+routes(app);
 
-//  alert the user
-console.log('magical-tavern running on port ' + port);
-
-//  expose app
-exports = module.exports = app;
+app.listen(port, () => console.log(`Listening on port ${port}`));

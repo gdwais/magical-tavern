@@ -1,23 +1,26 @@
-# Magical Tavern
+# magical-tavern
 
-#### MEAN Stack app
+Just a fun little SERN app for creating and managing d&d character sheets.
 
-### Overview
+Postgres - Express - React - NodeJS
 
-Magical Tavern is an app built using the MEAN stack (Mongodb, Express, Angular & NodeJS).  
+## Setup Instructions
 
-### Setup
-> clone repo
+* make sure you have postgres installed and running
+* navigate to project root
 
-if bower is not installed 
-> npm install -g bower
+* install yarn
+> yarn
 
-> npm install
+* install node_modules
+> npm run reinstall 
 
-> bower install  
+* create the project database
+> **createdb magical-tavern-db**
 
-> configure and confirm mongodb local db path
+* run migrations
+> up:: npm run migrate.dev.up
+> down:: npm run migrate.dev.down
 
-> run app "node server.js"
-
-> open browser to: http://localhost:8080/
+* start application
+> npm run start
