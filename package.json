@@ -6,7 +6,7 @@
     "client": "cd client && yarn start",
     "server": "node server.js",
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "reinstall": "rm -rf node_modules && rm -rf package-lock.json && npm install",
+    "reinstall": "rm -rf node_modules && rm package-lock.json yarn.lock && npm install",
     "debug": "node inspect server.js",
     "kill": "lsof -P | grep ':5001' | awk '{print $2}' | xargs kill -9",
     "migrate": "node-pg-migrate",
