@@ -5,13 +5,13 @@ module.exports = (app) => {
 
     app.get('/api/users', async (req, res) => {
         _.logMessage(`GET /api/users`);
-        let users = await db.selectQuery(`select * from users`);
+        let users = await db.selectQuery('users');
         res.status(200).send(users);
     });
 
     app.get('/api/user/:id', async (req, res) => {
         _.logMessage(`GET ONE /api/user/${req.params.id}`);
-        let users = await db.selectQuery(`select * from users where user_id = ${req.params.id}`);
+        let users = await db.selectQuery('users', undefined, { user_id: req.params.id });
         res.status(200).send(users[0]);
     });
 
@@ -32,6 +32,11 @@ module.exports = (app) => {
 
     app.put('/api/users/:id', async (req, res) => {
         _.logMessage(`PUT /api/users/${req.params.id}`);
+        if (req.body) {
+            let updatedUser = db.updateQuery('users', { user_id: req.params.id }, req.body);
+        } else {
+            res.status(500).send(`no request body found`);
+        }
     });
 
     app.delete('/api/users/:id', async   (req, res) => {
