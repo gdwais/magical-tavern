@@ -5,7 +5,8 @@ const _ = global;
 
 let selectQuery = async (table, what, where) => {
     try {
-        const result = await pool.query(formatSelectQuery(table, what, where));
+        const queryText = formatSelectQuery(table, what, where);
+        const result = await pool.query(queryText);
         return result.rows;
     } catch (err) {
         _.logMessage(`an error occurred while selecting :: ${err}`);
@@ -43,10 +44,12 @@ let deleteQuery = async (table, queryObj) => {
 }
 
 let formatSelectQuery = (table, what, where) => {
+    debugger;
     const selectWhat = what ? what.join() : `*`;
-    const whereArray = where ? Object.keys(where).map(i => i => `${where[i]} = $${++i}`) : undefined;
+    const whereArray = where ? where.map(k => `${k} = ${where[k]}`) : undefined;
     const selectWhere = whereArray ? ` WHERE ${whereArray.join(` AND `)}` : ``;
-    return `SELECT ${selectWhat} FROM ${table} ${selectWhere}`;
+    const queryText = `SELECT ${selectWhat} FROM ${table} ${selectWhere}`;
+    return queryText;
 };
 
 let formatInsertQuery = (table, keys) => {
@@ -56,7 +59,7 @@ let formatInsertQuery = (table, keys) => {
 
 let formatUpdateQuery = (table, where, keys) => {
     const paramKeys = Object.keys(keys).map(i => `${keys[i]} = $${++i}`);
-    const whereArray = where ? Object.keys(where).map(i => i => `${where[i]} = $${++i}`) : undefined;
+    const whereArray = where ? Object.keys(where).map(i => `${where[i]} = $${++i}`) : undefined;
     return `UPDATE ${table} SET ${ paramKeys.join()} ${whereArray.join(` AND `)}  RETURNING *`;
 };
 
@@ -66,7 +69,6 @@ let formatDeleteQuery = (table, keys) => {
 };
 
 module.exports = {
-    runQuery: runQuery,
     selectQuery: selectQuery,
     insertQuery: insertQuery,
     updateQuery: updateQuery,

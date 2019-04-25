@@ -11,19 +11,20 @@ module.exports = (app) => {
 
     app.get('/api/character/:id', async (req, res) => {
         _.logMessage(`GET ONE /api/character/${req.params.id}`);
-        let users = await db.selectQuery(`select * from characters where character_id = ${req.params.id}`);
-        res.status(200).send(users[0]);
+        let characters = await db.selectQuery('characters', { character_id: req.params.id });
+        res.status(200).send(characters[0]);
     });
 
     app.post('/api/characters', async (req, res) => {
         _.logMessage(`POST /api/characters`);
-        if (req.body) {
+        let payload = req.body;
+        if (payload) {
             try {
-                let newUser = await db.insertQuery('users', req.body);
-                res.status(200).send(newUser);
+                let newCharacter = await db.insertQuery('characters', payload);
+                res.status(200).send(newCharacter);
             } catch(err) {
-                _.logMessage(`something failed on the insert`);
-                res.status(500).send();
+                _.logMessage(`an error occured during insert :: ${err}`);
+                res.status(500).send(err);
             }
         } else {
             res.status(500).send(`no request body found`);
@@ -32,10 +33,25 @@ module.exports = (app) => {
 
     app.put('/api/characters/:id', async (req, res) => {
         _.logMessage(`PUT /api/characters/${req.params.id}`);
+        let payload = req.body;
+        if (payload) {  
+            payload.updated_date = new Date();
+            let updatedCharacter = await db.updateQuery('characters', { character_id: req.params.id }, req.body);
+            res.status(200).send(updatedCharacter);
+        } else {
+            res.status(500).send(`no request body found`);
+        }
+
     });
 
     app.delete('/api/characters/:id', async   (req, res) => {
         _.logMessage(`DELETE /api/characters/${req.params.id}`);
+        try {
+            let users = await db.deleteQuery('characters', { character_id: req.params.id });
+            res.status(200).send(users[0]);
+        } catch (err) {
+            res.status(500).send(`an error occured :: ${err}`);
+        }
     });
 
 }
