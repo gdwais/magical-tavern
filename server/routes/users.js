@@ -34,8 +34,8 @@ module.exports = (app) => {
         }
     });
 
-    app.put('/api/users/:id', async (req, res) => {
-        _.logMessage(`PUT /api/users/${req.params.id}`);
+    app.put('/api/user/:id', async (req, res) => {
+        _.logMessage(`PUT /api/user/${req.params.id}`);
         let payload = req.body;
         if (payload) {  
             payload.updated_date = new Date();

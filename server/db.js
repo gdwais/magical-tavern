@@ -26,6 +26,7 @@ let insertQuery = async (table, queryObj) => {
 let updateQuery = async (table, where, queryObj) => {
     try {
         const queryText = formatUpdateQuery(table, where, Object.keys(queryObj));
+        debugger;
         const result = await pool.query({ text: queryText, values: Object.values(queryObj) });
         return result.rows;
     } catch (err) {
@@ -44,10 +45,9 @@ let deleteQuery = async (table, queryObj) => {
 }
 
 let formatSelectQuery = (table, what, where) => {
-    debugger;
     const selectWhat = what ? what.join() : `*`;
-    const whereArray = where ? where.map(k => `${k} = ${where[k]}`) : undefined;
-    const selectWhere = whereArray ? ` WHERE ${whereArray.join(` AND `)}` : ``;
+    const whereArray = where ? Object.keys(where).map((k) => { return `${k} = ${where[k]}` }) : undefined;
+    const selectWhere = whereArray ? `WHERE ${whereArray.join(` AND `)}` : ``;
     const queryText = `SELECT ${selectWhat} FROM ${table} ${selectWhere}`;
     return queryText;
 };
@@ -58,9 +58,11 @@ let formatInsertQuery = (table, keys) => {
 };
 
 let formatUpdateQuery = (table, where, keys) => {
+    debugger;
     const paramKeys = Object.keys(keys).map(i => `${keys[i]} = $${++i}`);
-    const whereArray = where ? Object.keys(where).map(i => `${where[i]} = $${++i}`) : undefined;
-    return `UPDATE ${table} SET ${ paramKeys.join()} ${whereArray.join(` AND `)}  RETURNING *`;
+    const whereArray = where ? Object.keys(where).map((k) => { return `${k} = ${where[k]}` }) : undefined;
+    const insertWhere = whereArray ? `WHERE ${whereArray.join(` AND `)}` : ``;
+    return `UPDATE ${table} SET ${ paramKeys.join()} ${insertWhere}  RETURNING *`;
 };
 
 let formatDeleteQuery = (table, keys) => {

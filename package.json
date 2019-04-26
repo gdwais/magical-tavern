@@ -28,9 +28,11 @@
     "node-pg-migrate": "^3.18.1",
     "pg": "^7.10.0",
     "pg-async": "^3.1.0",
+    "pg-hstore": "^2.3.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scripts": "2.0.5"
+    "react-scripts": "2.0.5",
+    "sequelize": "^5.7.5"
   },
   "devDependencies": {
     "concurrently": "^4.0.1",
