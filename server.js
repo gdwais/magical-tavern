@@ -28,3 +28,5 @@ const routes = require('./server/routes');
 routes(app);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+module.exports = app;

@@ -1,6 +1,6 @@
 {
   "name": "magical-tavern",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Dalton Wais",
   "license": "MIT",
   "scripts": {
@@ -12,7 +12,14 @@
     "kill": "lsof -P | grep ':5001' | awk '{print $2}' | xargs kill -9",
     "migrate": "node-pg-migrate",
     "migrate.dev.up": "DATABASE_URL=postgres://localhost:5432/magical-tavern-db node-pg-migrate up",
-    "migrate.dev.down": "DATABASE_URL=postgres://localhost:5432/magical-tavern-db node-pg-migrate down"
+    "migrate.dev.down": "DATABASE_URL=postgres://localhost:5432/magical-tavern-db node-pg-migrate down",
+    "getscripts": "node -e \"console.log(require('./package.json').scripts)\"",
+    "getname": "node -e \"console.log(require('./package.json').name)\"",
+    "getversion": "node -e \"console.log(require('./package.json').version)\"",
+    "setpatchversion": "npm version patch --no-git-tag-version --force",
+    "setminorversion": "npm version minor --no-git-tag-version --force",
+    "setmajorversion": "npm version major --no-git-tag-version --force",
+    "test": "NODE_ENV=development jest"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.2",
@@ -21,11 +28,14 @@
     "node-pg-migrate": "^3.18.1",
     "pg": "^7.10.0",
     "pg-async": "^3.1.0",
+    "pg-hstore": "^2.3.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scripts": "2.0.5"
+    "react-scripts": "2.0.5",
+    "sequelize": "^5.7.5"
   },
   "devDependencies": {
-    "concurrently": "^4.0.1"
+    "concurrently": "^4.0.1",
+    "jest": "^24.7.1"
   }
 }

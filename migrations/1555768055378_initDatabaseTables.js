@@ -21,7 +21,17 @@ exports.up = (pgm) => {
       pgm.createTable('characters', {
         character_id: 'id',
         user_id: { type: 'integer', notNull: true },
-        character_data: { type: 'JSON', notNull: true }
+        character_data: { type: 'JSON', notNull: true },
+        created_date: {
+          type: 'timestamp',
+          notNull: true,
+          default: pgm.func('current_timestamp')
+        },
+        updated_date: {
+          type: 'timestamp',
+          notNull: true,
+          default:pgm.func('current_timestamp')
+        }
       });
 };
 
