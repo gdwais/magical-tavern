@@ -5,14 +5,20 @@ module.exports = (app) => {
 
     app.get('/api/characters', async (req, res) => {
         _.logMessage(`GET /api/characters`);
-        let users = await db.selectQuery(`select * from characters`);
-        res.status(200).send(users);
+        let characters = await db.selectQuery('characters');
+        res.status(200).send(characters);
     });
 
-    app.get('/api/character/:id', async (req, res) => {
-        _.logMessage(`GET ONE /api/character/${req.params.id}`);
-        let characters = await db.selectQuery('characters', { character_id: req.params.id });
+    app.get('/api/characters/:id', async (req, res) => {
+        _.logMessage(`GET ONE /api/characters/${req.params.id}`);
+        let characters = await db.selectQuery('characters', undefined, { character_id: req.params.id });
         res.status(200).send(characters[0]);
+    });
+
+    app.get('/api/characters/user/:id', async (req, res) => {
+        _.logMessage(`GET /api/characters/user/${req.params.id}`);
+        let characters = await db.selectQuery('characters', undefined, { user_id: req.params.id });
+        res.status(200).send(characters);
     });
 
     app.post('/api/characters', async (req, res) => {
@@ -36,7 +42,7 @@ module.exports = (app) => {
         let payload = req.body;
         if (payload) {  
             payload.updated_date = new Date();
-            let updatedCharacter = await db.updateQuery('characters', { character_id: req.params.id }, req.body);
+            let updatedCharacter = await db.updateQuery('characters', { character_id: req.params.id }, payload);
             res.status(200).send(updatedCharacter);
         } else {
             res.status(500).send(`no request body found`);
@@ -44,11 +50,11 @@ module.exports = (app) => {
 
     });
 
-    app.delete('/api/characters/:id', async   (req, res) => {
+    app.delete('/api/characters/:id', async (req, res) => {
         _.logMessage(`DELETE /api/characters/${req.params.id}`);
         try {
-            let users = await db.deleteQuery('characters', { character_id: req.params.id });
-            res.status(200).send(users[0]);
+            let result = await db.deleteQuery('characters', { character_id: req.params.id });
+            res.status(200).send(result);
         } catch (err) {
             res.status(500).send(`an error occured :: ${err}`);
         }

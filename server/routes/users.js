@@ -9,7 +9,7 @@ module.exports = (app) => {
         res.status(200).send(users);
     });
 
-    app.get('/api/user/:id', async (req, res) => {
+    app.get('/api/users/:id', async (req, res) => {
         _.logMessage(`GET ONE /api/user/${req.params.id}`);
         try {
             let users = await db.selectQuery('users', undefined, { user_id: req.params.id });
@@ -34,7 +34,7 @@ module.exports = (app) => {
         }
     });
 
-    app.put('/api/user/:id', async (req, res) => {
+    app.put('/api/users/:id', async (req, res) => {
         _.logMessage(`PUT /api/user/${req.params.id}`);
         let payload = req.body;
         if (payload) {  
@@ -46,11 +46,11 @@ module.exports = (app) => {
         }
     });
 
-    app.delete('/api/users/:id', async   (req, res) => {
+    app.delete('/api/users/:id', async (req, res) => {
         _.logMessage(`DELETE /api/users/${req.params.id}`);
         try {
-            let users = await db.deleteQuery('users', { user_id: req.params.id });
-            res.status(200).send(users[0]);
+            let result = await db.deleteQuery('users', { user_id: req.params.id });
+            res.status(200).send(result);
         } catch (err) {
             res.status(500).send(`an error occured :: ${err}`);
         }
